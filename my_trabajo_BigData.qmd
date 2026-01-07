@@ -1,0 +1,560 @@
+---
+title: "Sabrina Carpenter"
+description: |
+  Ánalisis descriptivo sobre las canciones de Sabrina centrandonos en el álbum Short 'n Sweet
+author:
+  - name: Noura Es Salhi Piquer
+    affiliation: Universitat de València
+    affiliation-url: https://www.uv.es
+date: today                          #--
+categories: [trabajo BigData, sabrina carpenter]   #--
+image: "./imagenes/sab_logo.png"
+title-block-banner: true #- {true, false, "green","#AA0000"}
+title-block-banner-color: "powderblue"    #-"#FFFFFF" 
+toc-depth: 3
+smooth-scroll: true
+format: 
+  html:
+    #backgroundcolor: "#F1F3F4"
+    #embed-resources: true
+    link-external-newwindow: true
+    #css: assets/my_css_file.css   #- CUIDADO!!!!
+code-tools: true
+code-fold: true
+code-summary: "Mostrar / Ocultar código"
+code-link: true
+---
+
+# Introducción
+
+## Librerías  
+Estas son las librerias que he utilizado.
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+#install.packages("treemap")
+#install.packages("worldcloud2")
+library(tidyverse)
+library(sf)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+library(sf)
+library(gt)
+library(gtExtras)
+library(rio)
+library(forcats)
+library(giscoR)
+library(plotly)
+library(tidytext)
+library(wordcloud)
+library(tmap) 
+library(leaflet)
+library(treemap)
+library(wordcloud2)
+library(leaflet)
+library(htmlwidgets)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(scales)
+```
+
+## Datos
+
+Estos son los datos que he usado, extraídos de la API de Spotify y datos de usuarios de Kaggle
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+ruta_albums <- "./datasets/albums.csv"
+albums <- rio::import(ruta_albums)
+
+ruta_discography <- "./datasets/sabrina_carpenter_discography.csv"
+discografia <- rio::import(ruta_discography)
+
+ruta_top_songs <- "./datasets/Top Songs.csv"
+top_songs <- rio::import(ruta_top_songs)
+
+ruta_tracks <- "./datasets/tracks.csv"
+tracks <- rio::import(ruta_tracks)
+
+ruta_visitas <- "./datasets/sabrina_diario_total_visitas_por_cancion.csv"
+vis_cancion <- rio::import(ruta_visitas)
+
+```
+
+
+## Motivación personal
+
+Sabrina Carpenter es una artista que en su dia (hace mucho tiempo) dije que no me gustaba su música, que me parecía muy básica. Para entonces yo escuchaba otros géneros, rock español, reggaeton, trap cualquier otro. De repente un día mi compañera de piso empezó a enseñarme mucho pop como, Tate Mcrae, Sabrina, Laufey, Chappell Roan. 
+
+En ese tiempo Sabrina fue una de las artistas que mas escuché (lo confirma mi SELECT artist, COUNT (*) AS plays FROM streams WHERE user_id = :user_id GROUP BY artist ORDER BY plays DESC LIMIT 1;) y yo todo el dia estaba please please please y that boy is corrupt pam pam. 
+
+La cuestión esta que me encantó y aunque principalmente quería hacer el trabajo sobre KATSEYE (tercera imagen) no encontré muchos datos con los que pudiera trabajar así que me decidí por Sabrina Carpintero.
+
+
+::: columns
+::: {.column width="33%"}
+![](./imagenes/spotsab.jpeg){width="100%"}
+:::
+
+::: {.column width="33%"}
+![](./imagenes/memespot.jpeg){width="100%"}
+:::
+
+::: columns
+::: {.column width="33%"}
+![](./imagenes/kats4.png){width="100%"}
+:::
+
+
+## Datos descriptivos
+
+Sabrina Carpenter es una cantante, compositora, productora musical y actriz estadounidense (ella trabaja hasta tarde porque es una cantante 🥺). Inició su carrera artistica a una edad temprana primero como actriz y mas tarde como cantante. 
+
+Su carrera ha tenido un gran desarrollo pasando de producciones muy juveniles a trabajos con un enfoque mas maduro y personal. Esto se refleja en su éxito comercial pues actualmente (21/12/2025) cuenta con más de 78 millones de oyentes mensuales en Spotify (es que es la mejor). 
+
+
+## Reproductor spotify
+
+Este es un reproductor para que escuches la cancion que mas he escuchado este año mientras lees el trabajo.
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+
+ruta_please_please_please <- "https://open.spotify.com/embed/track/5N3hjp1WNayUPZrA8kJmJP"
+knitr::include_url(ruta_please_please_please, height = "152")
+```
+
+
+# Análisis cuantitativo de escuchas
+
+## Exposición de los álbumes 
+
+Sus inicios en la era Disney (2015-2016) quedan definidos por los álbumes Eyes Wide Open y EVOLution, ambos con un volumen estándar de 12 a 13 canciones. Esta etapa refleja a una artista joven dentro del molde del pop adolescente, donde la extensión de los discos seguía un formato comercial predecible y seguro.
+
+La llegada de su etapa de reinvención y autonomía creativa (2018-2019) se materializó en la saga Singular. Dividida en dos actos de 13 y 14 canciones respectivamente, este proyecto mostró una ambición mayor. No solo aumentó ligeramente la cantidad de material, sino que simbolizó su deseo de tomar el control, explorando un sonido más pulido y adulto, y presentando su arte como una narrativa en dos partes.
+
+
+La explosión de madurez y reconocimiento crítico (2022-2023) llegó con emails i can’t send. El álbum original, de 13 canciones, fue un ejercicio que la estableció como cantautora. Su éxito impulsó la versión extendida, fwd:, que con 15 temas demostró la vitalidad de su nueva etapa y su capacidad para ampliar un universo musical ya resonante con el público.
+
+La época actual de dominio y éxito masivo (2024) está coronada por Short n’ Sweet . Mientras la versión estándar se mantiene en 12 temas concentrados, la edición Deluxe, con 17 canciones, es la más extensa de su carrera. Este volumen no es casual; es el reflejo de un momento cumbre: una artista en la cima de su popularidad, con la confianza para ofrecer más y la demanda de un público global ávido por cada nuevo tema.
+
+Finalmente, Man’s Best Friend publicado enagosto de 2025. El disco continúa la evolución artística iniciada en Short n’ Sweet, mostrando una imagen más madura y segura tanto a nivel sonoro como lírico. Musicalmente, el álbum se mueve principalmente dentro del pop, incorporando influencias de soft rock, disco, funk y R&B, lo que le aporta mayor variedad estilística.
+
+Las letras de Man’s Best Friend destacan por su tono irónico y provocador, centradas en las relaciones sentimentales, la independencia emocional y la crítica a ciertos comportamientos masculinos desde una perspectiva sarcástica. El sencillo principal, Manchild, obtuvo un gran éxito comercial y ayudó a consolidar el impacto del álbum a nivel internacional. Además, la estética visual del proyecto generó debate por su carácter provocador, reforzando la identidad artística de Carpenter. En conjunto, el álbum confirma a Sabrina Carpenter como una figura consolidada y relevante dentro del pop contemporáneo. (me encanta este álbum)
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+albums_limpio <- albums %>% 
+  select(album_name,album_type, total_tracks ) %>% 
+  filter(album_type == "album")
+p1 <- ggplot(albums_limpio, aes(album_name, total_tracks)) +
+  coord_flip() + geom_col(fill = "powderblue") +
+  labs(
+    title = "Número de canciones por cada album de Sabrina Carpenter",
+    x = "Álbum", 
+    y = "Número de canciones" ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy")
+  )
+ggplotly(p1, width = 600, height = 400)
+```
+
+## Discografia centrada en géneros musicales
+
+El gráfico presenta la diversidad estilística de Sabrina Carpenter, mostrando su fuerte base en el Pop convencional y su evolución hacia subgéneros más definidos y modernos. Destacan los géneros:
+
+Núcleo pop tradicional: Géneros como Pop, Dance Pop y Synth Pop dominan con el mayor número de canciones, reflejando su sonido principal accesible y comercial.
+
+Fusión y experimentación: Presencia significativa de Electropop, Rock Pop y R&B, que marcan su madurez artística y su búsqueda de texturas más complejas.
+
+Toques acústicos e íntimos: Géneros como Acoustic Pop y Folk Pop aparecen en menor medida, alineados con momentos más personales (como en emails i can’t send).
+
+Exploración de nicho : Estilos como Disco Pop, Latin Pop o Country Pop aparecen de forma puntual, demostrando su versatilidad sin alejarse de su esencia.
+
+Sabrinita se mantiene firmemente en el espectro pop, pero lo expande mediate fusiones que reflejan las distintas épocas de su carrera: desde el Bubblegum Pop inicial hacia un Synth Pop y Electropop más contemporáneo y sofisticado.
+
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+disco_generos <- discografia %>%
+  select(track_name, track_musical_genre) %>% 
+  group_by(track_musical_genre) %>% 
+  count(track_musical_genre)
+
+p2 <- ggplot(disco_generos, aes(track_musical_genre, n))  +
+  coord_flip() + geom_col(fill = "powderblue") + 
+  labs(
+    title = "Distribución de géneros musicales",
+    x = "Géneros", 
+    y = "Número de canciones") +
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy")
+  )
+ggplotly(p2, width = 600, height = 400)
+
+
+```
+
+
+## Canciones con mas streams
+
+Durante sus primeras eras, canciones como Fast Times (cerca de 71M de streams) y Vicious (unos 100M) establecieron una base de audiencia sólida y un éxito moderado, típico de una artista pop en crecimiento. Temas de álbumes como bet u wanna o la homónima emails i can’t send se mantienen en un rango respetable, entre 40 y 120 millones de streams, reflejando un consumo más dedicado de su discografía completa.
+
+Sin embargo, el panorama cambió radicalmente con el lanzamiento de Nonsense (2022), que se convirtió en su primer fenómeno viral al superar la barrera de los 1.000 millones de streams. Esta canción no solo fue un éxito aislado, sino el catalizador que anunció su llegada a una nueva estratosfera comercial. Este impulso se consolidó con la era de Short n’ Sweet (2024), donde Espresso y Please Please Please han acumulado aproximadamente 800 millones de streams respectivamente en un tiempo récord, demostrando su dominio absoluto en las listas globales.
+
+La cima de este ascenso la ocupa Espresso, con alrededor de 1.250 millones de streams, coronándose no solo como su canción más escuchada, sino como el himno que encapsula su reinado en el pop contemporáneo. En contraste, canciones más íntimas o de corte álbum como Lonesome o things i wish you said registran las cifras más bajas del gráfico (entre 20 y 30M), subrayando la breve pero significativa distancia entre el impacto masivo de sus sencillos y el consumo profundo de su obra.
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+
+disco_streams <- discografia %>%
+  select(track_name, spotify_streams) %>% 
+  filter(track_name %in% c(
+    "Taste",
+    "Please Please Please",
+    "Good Graces",
+    "Sharpest Tool",
+    "Coincidence",
+    "Bed Chem",
+    "Espresso",
+    "Dumb & Poetic",
+    "Slim Pickins",
+    "Juno",
+    "Lie To Girls",
+    "Don’t Smile",
+    "opposite",
+    "Feather",
+    "Lonesome",
+    "things i wish you said",
+    "emails i can't send",
+    "Vicious",
+    "Read your Mind",
+    "Tornado Warnings",
+    "because i liked a boy",
+    "Already Over",
+    "how many things",
+    "bet u wanna",
+    "Nonsense",
+    "Fast Times"
+    )) %>% 
+  mutate(
+    spotify_streams = str_replace_all(spotify_streams, "\\.", ""),
+    spotify_streams = as.numeric(spotify_streams))
+
+
+p3 <- ggplot(disco_streams, aes(track_name, spotify_streams)) + 
+  geom_col(fill = "powderblue") + coord_flip() +
+  labs(
+    title = "Streams totales de cada canción en Spotify",
+    x = "Canciones", 
+    y = "Streams totales") +
+  scale_y_continuous(
+    labels = comma,
+    breaks = c( 50000000, 750000000, 1250000000 )
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy")
+  )
+ggplotly(p3, width = 600, height = 400)
+
+
+```
+
+## Albums publicados cada año
+
+La trayectoria de Sabrina Carpenter, graficada a través de sus lanzamientos por año, refleja una carrera marcada por etapas de intensa productividad artística, seguidas por períodos de reflexión y reinvención. La línea temporal no es constante, sino que responde a los ciclos creativos y madurez de la artista.
+
+Su carrera despegó en 2015 con el lanzamiento de su álbum debut, Eyes Wide Open, mientras aún era una figura emergente de Disney. Esto inició un primer ciclo de alta productividad que se extendió hasta 2016 con EVOLution, consolidando su presencia en el pop adolescente.
+
+Luego, la gráfica muestra un período de silencio discográfico de casi dos años, un espacio crucial donde Carpenter se distanció de su imagen inicial y trabajó en un sonido más propio. Este hiato culminó con una explosión creativa entre 2018 y 2019, años en los que lanzó los dos volúmenes de su proyecto más conceptual hasta entonces: Singular Act I y Singular Act II. Esta fase demostró su evolución hacia una artista con mayor control autoral.
+
+Tras otro breve descenso en la actividad (2020-2021), posiblemente influenciado por la pandemia, regresó con fuerza en 2022 con el aclamado emails i can’t send, un álbum introspectivo que marcó un punto de inflexión en su credibilidad como cantautora. El impulso de este disco generó una nueva era de alta frecuencia, extendiéndose a 2023 con la versión ampliada fwd: y alcanzando su pico comercial en 2024 con Short n’ Sweet y su edición Deluxe.
+
+Este patrón de lanzamientos revela una estrategia deliberada: períodos de intensa creación y exposición pública, intercalados con momentos de pausa para cultivar una evolución artística significativa. Cada regreso ha estado marcado por un sonido más definido y un éxito comercial mayor, construyendo una narrativa de crecimiento constante que ha llevado a Sabrina Carpenter de estrella adolescente a ser una de las principales figuras del pop actual.
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+
+albums_anos <- albums %>%
+  select(album_name, release_date) %>%
+  mutate(año = year(release_date)) %>%   
+  group_by(año) %>%
+  summarise(cantidad = n()) %>% 
+  ungroup()
+
+p4 <- ggplot(albums_anos, aes(año, cantidad)) + 
+  geom_line(color = "powderblue") + 
+  geom_point(color = "navy") +
+  labs(
+    title = "Álbums lanzados cada año",
+    x = "Años", 
+    y = "Álbums lanzados") +
+  theme_classic() +
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy")
+  )
+
+ggplotly(p4, width = 600, height = 400)
+
+```
+
+## 10 canciones mas populares 
+
+El ranking de las 10 canciones más populares de Sabrina Carpenter ofrece una visión integral de su impacto comercial, diversidad musical y estrategia de promoción, consolidando la narrativa de su ascenso al estrellato.
+
+¡
+El podio lo ocupan los himnos que definen su era de mayor éxito. "Espresso" lidera con contundencia, superando los 1.300 millones de streams en Spotify. Junto a "Nonsense" (casi 1.000 millones) y "Please Please Please" (casi 800 millones), forman el trío de canciones que ha traspasado el umbral del hit viral para convertirse en estándares del pop contemporáneo. "Feather", aunque en cuarto lugar, completa este bloque de canciones con cifras masivas (660M), confirmando que su período 2022-2024 ha sido de una productividad hit-maker excepcional. Este top 10 es un testimonio de su versatilidad. Sabrinita no se adhiere a un solo sonido; explora y triunfa en distintos subgéneros:
+
+Disco Pop ("Espresso")
+
+R&B ("Nonsense")
+
+Country Pop ("Please Please Please")
+
+Dance Pop ("Feather")
+
+Electropop ("Thumbs", "Sue Me")
+
+Alternative Pop ("because i liked a boy")
+
+Esta fusión constante le ha permitido refrescar su imagen y atraer a diferentes segmentos de oyentes, manteniendo una identidad pop central pero nunca estática.
+
+La lista mezcla sencillos globales con cortes de álbum que resonaron fuertemente. Mientras "Espresso" o "Nonsense" son fenómenos diseñados para las listas, temas como "because i liked a boy" (Alternative Pop, 248M streams) o "Sue Me" (Electropop, 246M) alcanzaron popularidad por su calidad narrativa y su lugar dentro de la historia conceptual de sus álbumes, demostrando la solidez de su trabajo discográfico completo.
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+vis_cancion_streams_tot <- discografia %>% 
+  select(track_name, track_musical_genre, spotify_streams, videoclip_views) %>%
+  mutate(
+    spotify_streams = str_replace_all(spotify_streams, "\\.", ""),
+    spotify_streams = as.numeric(spotify_streams)) %>% 
+  slice_max(spotify_streams, n= 10)
+
+kable(vis_cancion_streams_tot, caption = 'Top 10 Canciones Más Populares') %>% 
+  kable_styling(
+    bootstrap_options = c('striped', 'hover', 'condensed', 'responsive'),
+    full_width = FALSE
+  ) %>%
+  row_spec(0, bold = TRUE, color = 'white', background = '#1f4e79') %>%  
+  row_spec(1:nrow(vis_cancion_streams_tot), background = '#e8f1fb')              
+
+
+```
+
+# Análisis cualitativo del álbum Short 'n Sweet
+
+## Letras álbum Short 'n Sweet
+
+El álbum Short 'n Sweet hace despegar la carrera de Sabrina gracias a su éxito comercial y a la viralidad de varios sencillos. Las letras de este álbum giran en torno a temas como: 
+
+La búsqueda del amor y sus dinámicas
+El núcleo de su narrativa sigue orbitando en torno al amor y las relaciones, con palabras clave como "love" (amor), "baby" (cariño) y "boy" (chico). Sin embargo, el tratamiento ha madurado: ya no es solo un anhelo idealizado, sino una exploración de sus complejidades, como sugieren términos como "lie" (mentira), "bet" (apostar) y "guess" (suponer), que hablan de desconfianza, juegos de poder y verdades a medias.
+
+Un lenguaje de sensualidad y confianza explícita
+Una de las evoluciones más notables es la incorporación de un lenguaje directo y sensual, marcando una ruptura con su imagen Disney. Palabras como "fuck", "taste" (sabor/probar), "bed" (cama) y "chem" (probable apócope de chemistry, química) aparecen con frecuencia, afirmando una sexualidad abierta y una confianza corpórea que define su era actual. Esto se refuerza con la recurrencia de "espresso", que trasciende la bebida para convertirse en una metáfora de energía, deseo e impacto inmediato.
+
+El diálogo interno y la confrontación
+Las letras de Carpenter funcionan a menudo como monólogos o conversaciones directas. Esto se ve en el uso de "talk" (hablar), "yeah" (sí), "uh" y "na" (muletillas que imitan el pensamiento en voz alta), y en frases como "makes sense" (tiene sentido). Ella no solo canta sobre emociones, sino que las procesa en tiempo real frente al oyente, creando una intimidad confessional.
+
+Afirmación del "yo" y la autonomía
+Un tema central es la autoafirmación y la defensa del espacio personal. Palabras como "girls" (chicas) y "time" (tiempo) suelen aparecer en contextos donde establece límites, da consejos o reclama su independencia. La palabra "sweet" (dulce), tan recurrente, a menudo se utiliza de forma irónica o como contraste en canciones que mezclan melodías pegadizas con letras mordaces, como en "Sweet n' Short".
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+ruta_letras <- "./datasets/letras_sab.csv"
+
+letras_sab <- rio::import(ruta_letras)
+
+lineas <- readLines(ruta_letras, encoding = "UTF-8")
+letras_sab <- data.frame(letra = lineas, stringsAsFactors = FALSE)
+
+letras_tidy <- letras_sab %>%
+  unnest_tokens(word, letra) %>%   
+  anti_join(stop_words) %>%        
+  count(word, sort = TRUE)         
+
+p5 <- letras_tidy %>%
+  slice_max(n, n = 25) %>%  
+  ggplot(aes(x = reorder(word, n), y = n)) +  
+  geom_bar(stat = "identity", fill = "powderblue") +  
+  coord_flip() +  
+  labs(title = "Las 25 palabras más frecuentes en las letras de Sabrina Carpenter",
+       x = "Palabra",
+       y = "Frecuencia") +
+  theme_classic() + 
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy")
+  )
+ggplotly(p5, width = 600, height = 400)
+```
+
+
+## Treemap de las palabras mas usadas
+
+El treemap visualiza las palabras más usadas en las letras de Sabrina Carpenter, donde su tamaño refleja la frecuencia. Muestra un léxico centrado en el amor, la sensualidad ("bed", "fuck"), la autoconfianza ("yeah", "wanna") y la reflexión emocional ("guess", "lie", "talk").
+
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+letras_p <- letras_tidy %>%
+  rename(frecuencia = n) %>%
+  slice_max(order_by = frecuencia, n = 50)
+
+colores_album_sab <- c("#3366CC", "#3399FF", "#66CCFF", "#003366", "#6699CC",
+            "#0033CC", "#66B2FF", "#99CCFF", "#336699", "#6699FF")
+
+p6 <- treemap(letras_p,
+        index = "word",
+        vSize = "frecuencia",
+        title = "Palabras en las canciones de Sabrina Carpenter",
+        palette = colores_album_sab,
+        border.col = "white",
+        border.lwds = 1,
+        fontface.labels = 3,
+        bg.labels = "transparent",
+        align.labels = c("center", "center"),
+        overlap.labels = 0.5)
+
+
+```
+
+## Relación entre características musicales
+
+### Relación entre energy y danceability
+
+El gráfico que analiza la relación entre la Energía (intensidad y potencia percibida) y la Bailabilidad (idoneidad para el baile) en la discografía de Sabrina Carpenter revela la fórmula acústica clave detrás de su éxito comercial y su evolución sonora.
+
+Se observa una correlación positiva y notablemente fuerte entre ambas variables. A medida que aumenta la energía de una canción, su nivel de bailabilidad también tiende a crecer. Esto no es casual, sino el resultado de una producción cuidadosa que sitúa la mayoría de sus lanzamientos, especialmente los más recientes, en el cuadrante superior derecho del gráfico: alta energía y alta bailabilidad.
+
+Este espacio es el territorio de sus mayores éxitos. Canciones como "Espresso", "Please Please Please" y "Nonsense" encarnan perfectamente este principio. Son temas con ritmos vibrantes, percusión marcada y arreglos dinámicos (alta energía) que, simultáneamente, poseen grooves infecciosos, tempos ideales y patrones rítmicos que invitan inmediatamente al movimiento (alta bailabilidad).
+
+Sin embargo, la gráfica también muestra puntos dispersos que representan su versatilidad artística. Algunas canciones, como baladas o temas más introspectivos (por ejemplo, "because i liked a boy" o "emails i can't send"), se ubican en zonas de menor energía pero mantienen una bailabilidad moderada, demostrando que incluso en momentos más íntimos, el elemento rítmico nunca desaparece por completo.
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+disco_analisis <- discografia %>% 
+  select(track_name, acousticness, danceability, energy, liveness, loudness, speechiness, tempo, valence)
+
+p7 <- ggplot(disco_analisis, aes(energy, danceability, color = danceability)) + 
+  geom_point(alpha = 0.6 ) + scale_color_gradient(low = "powderblue", high = "navy") +
+  labs(title = "Relación entre energy y danceability",
+       x = "energy",
+       y = "danceability") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_classic() + 
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy")
+  )
+  
+ggplotly(p7, width = 600, height = 400)
+
+```
+
+
+### Relación entre energy y valence
+
+El gráfico que explora la relación entre la Energía (intensidad musical) y la Valencia (positividad emocional) en las canciones de Sabrina Carpenter revela una fascinante dualidad en su arte, desafiando la expectativa simple de que la música alegre siempre es enérgica.
+
+Se observa una dispersión amplia y una correlación menos definida que en el caso de la bailabilidad. Las canciones se distribuyen por casi todo el espectro, lo que evidencia una paleta emocional más compleja. Sin embargo, pueden identificarse dos núcleos principales:
+
+El núcleo del pop empoderado y catártico: Un grupo significativo de canciones se agrupa en la región de alta energía y valencia media-alta (entre 0.6 y 0.8). Aquí residen himnos como "Espresso" y "Feather", donde una producción vibrante y enérgica sirve de vehículo para letras de confianza, superación o diversión. La energía no es caótica, sino eufórica.
+
+El territorio de la intensidad melancólica o agridulce: Un segundo grupo, igualmente relevante, muestra alta energía combinada con una valencia baja o media (por debajo de 0.5). Esta zona captura la esencia de canciones como "Vicious" o "Because I liked a boy", donde la potencia instrumental y vocal transmite frustración, ira, dolor o ironía. La energía aquí es dramática y confrontacional, no alegre.
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+p8 <- ggplot(disco_analisis, aes(energy, valence, color = valence)) + 
+  geom_point(alpha = 0.6 ) + scale_color_gradient(low = "powderblue", high = "navy") +
+  labs(title = "Relación entre energy y valence",
+       x = "energy",
+       y = "valence") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_classic() + 
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy"))
+
+ggplotly(p8, width = 600, height = 400)
+
+
+
+```
+
+
+### Relación entre tempo y danceability
+
+Contrario a lo que podría esperarse, no existe una correlación directa y fuerte entre un tempo más rápido y una mayor bailabilidad. En cambio, los datos revelan un punto óptimo claro: la mayoría de sus canciones, y en especial sus mayores éxitos, se concentran en un rango de tempo entre aproximadamente 100 y 140 BPM.
+
+Este rango es lo suficientemente rápido para generar energía y movimiento, pero no tan acelerado que se vuelva caótico o inaccesible para un baile casual. Dentro de esta zona, es donde encontramos el groove irresistible de "Espresso" (alrededor de 112 BPM) y el ritmo contagioso de "Please Please Please", canciones que maximizan su bailabilidad no con velocidad bruta, sino con patrones rítmicos sincopados, beats marcados y un swing inherente.
+
+La gráfica muestra que canciones con tempos más extremos (muy lentas por debajo de 80 BPM o muy rápidas por encima de 180 BPM) tienden a tener una bailabilidad menor. Esto refuerza la idea de que su sonido comercial está cuidadosamente calibrado para servir al cuerpo y a las listas de reproducción por igual.
+
+``` {r}
+#| echo: true
+#| message: false
+#| warning: false
+
+p9 <- ggplot(disco_analisis, aes(tempo, danceability, color = danceability)) + 
+  geom_point(alpha = 0.6 ) + scale_color_gradient(low = "powderblue", high = "navy") +
+  labs(title = "Relación entre tempo y danceability",
+       x = "tempo",
+       y = "danceability") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_classic() + 
+  theme(
+    plot.title = element_text(color = "navy", size = 14, face = "bold"),
+    axis.title = element_text(color = "navy"),
+    axis.text = element_text(color = "navy"))
+
+ggplotly(p9, width = 600, height = 400)
+
+```
+
+
+Este ha sido mi análisis sobre Sabrina, Sabrina te amo 🥰
